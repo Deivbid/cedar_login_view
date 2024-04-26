@@ -41,7 +41,7 @@ You'll need Node.js installed on your computer to run this project. You can down
 
 ```bash
 1. **Clone the repository:**
-git clone https://github.com/yourusername/cedar-frontend-challenge.git
+git clone https://github.com/Deivbid/cedar_login_view.git
 cd cedar-frontend-challenge
 
 2. **Install the dependencies:**
