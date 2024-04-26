@@ -3,16 +3,16 @@ import { useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 
 import { Form } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-
-import { cn } from "@/lib/utils";
-import { LoginSchema } from "@/lib/schemas/loginSchema";
 import { toast } from "./ui/use-toast";
 import { LoginField } from "./LoginField";
+
+import { LoginSchema } from "@/lib/schemas/loginSchema";
 
 type FieldName = "email" | "password";
 interface Input {
@@ -23,6 +23,7 @@ interface Input {
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const { setError, register, ...form } = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -78,6 +79,7 @@ export const LoginForm = () => {
           title: "Login Successful",
           description: "You are now logged in!",
         });
+        router.push("/management");
       } else {
         await handleErrorResponse(response);
       }
