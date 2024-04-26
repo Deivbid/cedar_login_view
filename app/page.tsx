@@ -6,7 +6,7 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col items-center justify-center min-w-96">
         <Image
-          src="/logoCedar.svg"
+          src="https://www.cedar.com/wp-content/uploads/2021/12/logo.svg"
           alt="Company Logo"
           width={500}
           height={500}
