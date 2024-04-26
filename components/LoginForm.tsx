@@ -16,9 +16,10 @@ import { Button } from "./ui/button";
 
 import { cn } from "@/lib/utils";
 import { LoginSchema } from "@/lib/schemas/loginSchema";
+import { toast } from "./ui/use-toast";
 
 export const LoginForm = () => {
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const { setError, register, ...form } = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
@@ -26,11 +27,49 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    console.log("Nothing yet!");
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Login Successful",
+          description: "You are now logged in!",
+        });
+      } else {
+        const errorData = await response.json();
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: errorData.error,
+        });
+        setError("email", {
+          type: "custom",
+          message: "This is not the correct email",
+        });
+        setError("password", {
+          type: "custom",
+          message: "This is not the correct password",
+        });
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "An unexpected error occurred.",
+      });
+    }
   };
+
   return (
-    <Form {...form}>
+    <Form {...form} setError={setError} register={register}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col items-center justify-center space-y-6 max-w-72 sm:max-w-full w-full"
@@ -47,6 +86,7 @@ export const LoginForm = () => {
                 <Input
                   type="email"
                   {...field}
+                  {...register("email")}
                   className={cn(
                     "py-6 rounded-xl border-[#6D7088]",
                     fieldState.error && "border-destructive"
@@ -70,6 +110,7 @@ export const LoginForm = () => {
                 <Input
                   type="password"
                   {...field}
+                  {...register("password")}
                   className={cn(
                     "py-6 rounded-xl border-[#6D7088]",
                     fieldState.error && "border-destructive"
