@@ -4,10 +4,16 @@ interface HierarchyProps {
   organization: { [key: string]: any };
 }
 
-const HierarchyNode = ({ name, children }: { name: string; children: any }) => {
+const HierarchyNode = ({
+  name,
+  childrensNodes,
+}: {
+  name: string;
+  childrensNodes: any;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const nextLevel = Object.keys(children);
+  const nextLevel = Object.keys(childrensNodes);
   return (
     <div className="p-2">
       <span
@@ -18,8 +24,12 @@ const HierarchyNode = ({ name, children }: { name: string; children: any }) => {
       </span>
       {isOpen && (
         <div className="ml-4 border-l-2 border-gray-300 pl-4">
-          {Object.keys(children).map((key) => (
-            <HierarchyNode key={key} name={key} children={children[key]} />
+          {Object.keys(childrensNodes).map((key) => (
+            <HierarchyNode
+              key={key}
+              name={key}
+              childrensNodes={childrensNodes[key]}
+            />
           ))}
         </div>
       )}
@@ -31,7 +41,11 @@ export const Hierarchy = ({ organization }: HierarchyProps) => {
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-lg p-4 m-4">
       {Object.keys(organization).map((key) => (
-        <HierarchyNode key={key} name={key} children={organization[key]} />
+        <HierarchyNode
+          key={key}
+          name={key}
+          childrensNodes={organization[key]}
+        />
       ))}
     </div>
   );
